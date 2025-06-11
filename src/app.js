@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import viewRoutes from "./routes/views.routes.js";
 
 const app = express();
-const PUERTO = 8080;
+const PUERTO = process.env.PORT || 8080; 
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
