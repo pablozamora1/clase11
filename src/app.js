@@ -1,6 +1,6 @@
 import express from "express";
 import { engine } from "express-handlebars";
-import { Socket } from "socket.io";
+import { Server } from "socket.io";
 import viewRoutes from "./routes/views.routes.js";
 
 const app = express();
@@ -17,4 +17,21 @@ app.use("/", viewRoutes);
 // Configuración del Socket.IO
 const httpServer = app.listen(PUERTO, () => {
   console.log(`Servidor escuchando en http://localhost:${PUERTO}`);
+});
+
+
+const io = new Server(httpServer);
+
+let mensajes = [];
+// Manejo de eventos de Socket.IO 
+io.on("connection", (socket) => {
+  console.log("Nuevo cliente conectado");
+
+  
+  // Manejar el evento de nuevo mensaje
+  socket.on("nuevoMensaje", (mensaje) => {
+    mensajes.push(mensaje);
+    io.emit("messagesLogs", mensajes); // Emitir a todos los clientes conectados
+  });
+
 });
